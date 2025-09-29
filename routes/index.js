@@ -20,9 +20,12 @@ router.get('/', function (req, res) {
     groupedData[resource].push({
       path: elem.path,
       method: elem.methods[0],
-      isLink: elem.methods[0] === 'GET',
+      isLink: elem.methods[0] === 'GET' && !elem.path.includes('/:id'),
     });
   });
+
+  console.log(groupedData);
+  
 
   res.render('index', { title: 'Express', fullData: groupedData });
 });
