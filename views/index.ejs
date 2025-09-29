@@ -1,0 +1,36 @@
+<html>
+
+<head>
+  <title>Express</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+
+<body>
+  <h1>Beauty Salon</h1>
+  <p>Welcome to Beauty Salon backend. | v.1.0</p>
+
+  <hr>
+
+  <h2>API LIST</h2>
+
+  <% for (const resource in fullData) { %>
+  <div class="resource">
+    <h3><%= resource %></h3>
+
+    <% fullData[resource].forEach(endpoint => { %>
+    <% if (endpoint.isLink) { %>
+    <a href="<%= endpoint.path %>" class="<%= endpoint.method %>">
+      <span><%= endpoint.method %></span> <%= endpoint.path %>
+    </a>
+    <% } else { %>
+    <a class="<%= endpoint.method %> block">
+      <span><%= endpoint.method %></span> <%= endpoint.path %>
+    </a>
+    <% } %>
+    <% }) %>
+  </div>
+  <% } %>
+
+</body>
+
+</html>
