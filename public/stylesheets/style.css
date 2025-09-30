@@ -36,6 +36,22 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Helv';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/Helvetica.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Helv';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/fonts/Helvetica-Bold.ttf') format('truetype');
+  font-display: swap;
+}
+
 body {
   padding: 50px;
 }
@@ -87,9 +103,10 @@ a span {
   padding: 6px 0;
   margin-right: 5px;
   text-align: center;
-  font-family: Arial;
   border-radius: 5px;
   color: #fff;
+  font-family: 'Helv';
+  font-size: 16px;
 }
 
 a.block {

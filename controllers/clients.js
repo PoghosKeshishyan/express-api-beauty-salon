@@ -20,8 +20,8 @@ const client = async (req, res) => {
 
     try {
         const client = await prisma.client.findUnique({
-            where: { 
-                id, 
+            where: {
+                id,
             },
             include: {
                 master: true,
@@ -30,8 +30,9 @@ const client = async (req, res) => {
         });
 
         if (!client) {
-            return res.status(404).json({ message: 
-                "Client not found", 
+            return res.status(404).json({
+                message:
+                    "Client not found",
             });
         }
 
@@ -45,11 +46,11 @@ const add = async (req, res) => {
     const data = req.body;
 
     if (
-        !data.name || 
-        !data.phone || 
-        !data.day || 
-        !data.time || 
-        !data.masterId || 
+        !data.name ||
+        !data.phone ||
+        !data.day ||
+        !data.time ||
+        !data.masterId ||
         !data.serviceId
     ) {
         return res.status(400).json({
@@ -58,61 +59,123 @@ const add = async (req, res) => {
     }
 
     try {
-        const client = await prisma.client.create({
-            data,
-            include: {
-                master: true,
-                service: true,
-            },
+        const isBusyMaster = await prisma.busyDates.findFirst({
+            where: {
+                masterId: data.masterId,
+                day: data.day,
+                time: data.time
+            }
         });
 
-        res.status(201).json(client);
+        if (isBusyMaster) {
+            return res.status(400).json({
+                message: "This master is already busy at that time"
+            });
+        }
+
+        const [client, busyDate] = await prisma.$transaction([
+            prisma.client.create({
+                data,
+                include: {
+                    master: true,
+                    service: true,
+                },
+            }),
+            prisma.busyDates.create({
+                data: {
+                    masterId: data.masterId,
+                    day: data.day,
+                    time: data.time
+                }
+            })
+        ]);
+
+        res.status(201).json({
+            client,
+            busyDate
+        });
     } catch (error) {
-        res.status(500).json({ message: "Failed to create client", error: error.message });
+        res.status(500).json({
+            message: "Failed to create client",
+            error: error.message
+        });
     }
 };
 
 const edit = async (req, res) => {
-    const { id } = req.params;
-    const { name, phone, day, time, masterId, serviceId } = req.body;
+  const { id } = req.params;
+  const { name, phone, day, time, masterId, serviceId } = req.body;
 
-    try {
-        const client = await prisma.client.update({
-            where: { id },
-            data: {
-                name,
-                phone,
-                day,
-                time,
-                masterId,
-                serviceId,
-            },
-            include: {
-                master: true,
-                service: true,
-            },
-        });
+  try {
+    const [client, busyDate] = await prisma.$transaction([
+      prisma.client.update({
+        where: { id },
+        data: {
+          name,
+          phone,
+          day,
+          time,
+          masterId,
+          serviceId,
+        },
+        include: {
+          master: true,
+          service: true,
+        },
+      }),
 
-        res.status(200).json(client);
-    } catch (error) {
-        res.status(500).json({ message: "Failed to update client", error: error.message });
-    }
+      prisma.busyDates.deleteMany({
+        where: { masterId, day, time },
+      }),
+
+      prisma.busyDates.create({
+        data: {
+          masterId,
+          day,
+          time,
+        },
+      }),
+    ]);
+
+    res.status(200).json({ client, busyDate });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to update client",
+      error: error.message,
+    });
+  }
 };
 
 const remove = async (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params;
 
-    try {
-        await prisma.client.delete({
-            where: { 
-                id, 
-            },
-        });
+  try {
+    const client = await prisma.client.findUnique({ where: { id } });
 
-        res.status(200).json({ message: "Client deleted successfully" });
-    } catch (error) {
-        res.status(500).json({ message: "Failed to delete client", error: error.message });
+    if (!client) {
+      return res.status(404).json({ message: "Client not found" });
     }
+
+    await prisma.$transaction([
+      prisma.busyDates.deleteMany({
+        where: {
+          masterId: client.masterId,
+          day: client.day,
+          time: client.time,
+        },
+      }),
+      prisma.client.delete({
+        where: { id },
+      }),
+    ]);
+
+    res.status(200).json({ message: "Client and related busy dates deleted successfully" });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to delete client",
+      error: error.message,
+    });
+  }
 };
 
 module.exports = {

@@ -24,9 +24,6 @@ router.get('/', function (req, res) {
     });
   });
 
-  console.log(groupedData);
-  
-
   res.render('index', { title: 'Express', fullData: groupedData });
 });
 

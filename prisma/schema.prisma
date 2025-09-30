@@ -14,11 +14,12 @@ datasource db {
 }
 
 model User {
-  id       String   @id @default(uuid())
-  username String   @unique
-  password String
-  role     String
-  masters  Master[]
+  id         String   @id @default(uuid())
+  username   String   @unique
+  password   String
+  role       String
+  masters    Master[]
+  created_at DateTime @default(now())
 }
 
 model Master {
@@ -56,6 +57,6 @@ model BusyDates {
   id       String  @id @default(uuid())
   day      String
   time     String
-  Master   Master? @relation(fields: [masterId], references: [id])
+  master   Master? @relation(fields: [masterId], references: [id])
   masterId String?
 }

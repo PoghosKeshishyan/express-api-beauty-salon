@@ -4,7 +4,7 @@ const all = async (req, res) => {
   try {
     const busyDates = await prisma.busyDates.findMany({
       include: {
-        Master: true,
+        master: true,
       },
     });
     res.status(200).json(busyDates);
@@ -20,7 +20,7 @@ const getOne = async (req, res) => {
     const busyDate = await prisma.busyDates.findUnique({
       where: { id },
       include: {
-        Master: true,
+        master: true,
       },
     });
 
@@ -49,7 +49,7 @@ const add = async (req, res) => {
         masterId,
       },
       include: {
-        Master: true,
+        master: true,
       },
     });
 
@@ -72,7 +72,7 @@ const edit = async (req, res) => {
         masterId,
       },
       include: {
-        Master: true,
+        master: true,
       },
     });
 
