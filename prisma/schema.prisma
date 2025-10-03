@@ -33,10 +33,12 @@ model Master {
 }
 
 model Service {
-  id       String   @id @default(uuid())
-  function String
-  masters  Master[] @relation("MasterServices")
-  clients  Client[]
+  id               String   @id @default(uuid())
+  function         String
+  durationInMinute Int?
+  price            Float?
+  masters          Master[] @relation("MasterServices")
+  clients          Client[]
 }
 
 model Client {
