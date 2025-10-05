@@ -33,12 +33,13 @@ model Master {
 }
 
 model Service {
-  id               String   @id @default(uuid())
+  id               String      @id @default(uuid())
   function         String
   durationInMinute Int?
   price            Float?
-  masters          Master[] @relation("MasterServices")
+  masters          Master[]    @relation("MasterServices")
   clients          Client[]
+  busyDates        BusyDates[]
 }
 
 model Client {
@@ -51,14 +52,21 @@ model Client {
   masterId  String
   serviceId String
 
-  master  Master  @relation(fields: [masterId], references: [id])
-  service Service @relation(fields: [serviceId], references: [id])
+  master    Master      @relation(fields: [masterId], references: [id])
+  service   Service     @relation(fields: [serviceId], references: [id])
+  busyDates BusyDates[]
 }
 
 model BusyDates {
-  id       String  @id @default(uuid())
-  day      String
-  time     String
-  master   Master? @relation(fields: [masterId], references: [id])
-  masterId String?
+  id   String @id @default(uuid())
+  day  String
+  time String
+
+  masterId  String?
+  serviceId String?
+  clientId  String?
+
+  master  Master?  @relation(fields: [masterId], references: [id])
+  service Service? @relation(fields: [serviceId], references: [id])
+  client  Client?  @relation(fields: [clientId], references: [id])
 }

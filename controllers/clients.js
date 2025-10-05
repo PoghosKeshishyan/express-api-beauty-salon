@@ -73,27 +73,35 @@ const add = async (req, res) => {
             });
         }
 
-        const [client, busyDate] = await prisma.$transaction([
-            prisma.client.create({
+        const result = await prisma.$transaction(async (tx) => {
+            const client = await tx.client.create({
                 data,
                 include: {
                     master: true,
                     service: true,
                 },
-            }),
-            prisma.busyDates.create({
+            });
+
+            const busyDate = await tx.busyDates.create({
                 data: {
                     masterId: data.masterId,
+                    serviceId: data.serviceId,
+                    clientId: client.id,
                     day: data.day,
                     time: data.time
+                },
+                include: {
+                    master: true,
+                    service: true,
+                    client: true
                 }
-            })
-        ]);
+            });
 
-        res.status(201).json({
-            client,
-            busyDate
+            return { client, busyDate };
         });
+
+        res.status(201).json(result);
+
     } catch (error) {
         res.status(500).json({
             message: "Failed to create client",

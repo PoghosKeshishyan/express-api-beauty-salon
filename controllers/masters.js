@@ -5,8 +5,15 @@ const all = async (req, res) => {
     const masters = await prisma.master.findMany({
       include: {
         services: true,
-        clients: true,
-        busyDates: true,
+        busyDates: {
+          select: {
+            id: true,
+            day: true,
+            time: true,
+            master: true,
+            service: true,
+          }
+        },
         user: {
           select: {
             id: true,
@@ -29,6 +36,7 @@ const master = async (req, res) => {
       where: { id },
       include: {
         services: true,
+        busyDates: true,
         user: {
           select: {
             id: true,

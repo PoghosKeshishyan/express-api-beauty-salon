@@ -5,6 +5,8 @@ const all = async (req, res) => {
     const busyDates = await prisma.busyDates.findMany({
       include: {
         master: true,
+        service: true,
+        client: true,
       },
     });
     res.status(200).json(busyDates);
@@ -21,6 +23,8 @@ const getOne = async (req, res) => {
       where: { id },
       include: {
         master: true,
+        service: true,
+        client: true,
       },
     });
 
