@@ -10,8 +10,8 @@ const all = async (req, res) => {
             id: true,
             day: true,
             time: true,
-            master: true,
             service: true,
+            client: true,
           }
         },
         user: {
