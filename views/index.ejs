@@ -8,28 +8,70 @@
 <body>
   <h1>Beauty Salon</h1>
   <p>Welcome to Beauty Salon backend. | v.1.7</p>
+  <p>A simple REST API built with <strong>Express.js</strong> and <strong>PostgreSQL</strong> for managing posts. You can explore the API using <a href="/docs"">Swagger UI</a>.</p>
 
-  <hr>
+  <hr style=" margin-top: 40px;">
 
-  <h2>API LIST</h2>
+      <h2 style="text-align: left; margin-left: 0; font-family: Helv;">Resources</h2>
 
-  <% for (const resource in fullData) { %>
-  <div class="resource">
-    <h3><%= resource %></h3>
+      <div class="api-list">
+        <b style="font-family: Helv;">[</b>
+        <% data.forEach(elem => { %>
+        <a href="<%= elem %>" style="margin-left: 20px; color: #0b7500; &:hover{text-decoration: underline;}" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+          <%= elem %>
+        </a>
+        <% }) %>
+        <b style="font-family: Helv;">]</b>
+      </div>
 
-    <% fullData[resource].forEach(endpoint => { %>
-    <% if (endpoint.isLink) { %>
-    <a href="<%= endpoint.path %>" class="<%= endpoint.method %>">
-      <span><%= endpoint.method %></span> <%= endpoint.path %>
-    </a>
-    <% } else { %>
-    <a class="<%= endpoint.method %> block">
-      <span><%= endpoint.method %></span> <%= endpoint.path %>
-    </a>
-    <% } %>
-    <% }) %>
-  </div>
-  <% } %>
+      <hr style="margin-top: 40px;">
+
+      <h2 style="text-align: left; margin-left: 0; font-family: Helv;">Routes</h2>
+
+      <div class="ss-list" style="margin-top: 20px; font-family: Helv;">
+
+        <div class="ss-row" style="display: flex;  
+              padding: 12px 16px; border: 1px solid #dcdcdc; 
+              border-radius: 8px; margin-bottom: 10px;
+              transition: background 0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+          <span style="font-weight: bold; color: #1677ff; width: 100px;">GET</span>
+          <span style="color: #000; font-weight: 700; font-family: Menlo;">/api/masters</span>
+        </div>
+
+        <div class="ss-row" style="display: flex;  
+              padding: 12px 16px; border: 1px solid #dcdcdc; 
+              border-radius: 8px; margin-bottom: 10px;
+              transition: background 0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+          <span style="font-weight: bold; color: #1677ff; width: 100px;">GET</span>
+          <span style="color: #000; font-weight: 700; font-family: Menlo;">/api/masters/1</span>
+        </div>
+
+        <div class="ss-row" style="display: flex;  
+              padding: 12px 16px; border: 1px solid #dcdcdc; 
+              border-radius: 8px; margin-bottom: 10px;
+              transition: background 0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+          <span style="font-weight: bold; color: #0b7500; width: 100px;">POST</span>
+          <span style="color: #000; font-weight: 700; font-family: Menlo;">/api/masters/add</span>
+        </div>
+
+        <div class="ss-row" style="display: flex;  
+              padding: 12px 16px; border: 1px solid #dcdcdc; 
+              border-radius: 8px; margin-bottom: 10px;
+              transition: background 0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+          <span style="font-weight: bold; color: #c99700; width: 100px;">PUT</span>
+          <span style="color: #000; font-weight: 700; font-family: Menlo;">/api/masters/edit/1</span>
+        </div>
+
+        <div class="ss-row" style="display: flex;  
+              padding: 12px 16px; border: 1px solid #dcdcdc; 
+              border-radius: 8px; margin-bottom: 10px;
+              transition: background 0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+          <span style="font-weight: bold; color: #c00000; width: 100px;">DELETE</span>
+          <span style="color: #000; font-weight: 700; font-family: Menlo;">/api/masters/remove/1</span>
+        </div>
+
+      </div>
+
 
 </body>
 

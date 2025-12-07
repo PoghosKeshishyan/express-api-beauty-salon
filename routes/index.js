@@ -4,6 +4,36 @@ const router = express.Router();
 
 router.get('/', function (req, res) {
   const apis = expressListEndpoints(req.app);
+  const groupedData = [];
+
+  apis.forEach((elem) => {
+    const pathParts = elem.path.split('/').filter(Boolean);
+
+    if (pathParts[0] !== 'api') return;
+
+    const resource = pathParts[1];
+
+    if (!groupedData[resource]) {
+      groupedData[resource] = [];
+    }
+
+    groupedData[resource].push(`${req.protocol}://${req.get('host')}${elem.path}`);
+  });
+
+
+  const newData = [];
+
+  for (let key in groupedData) {
+    if (key !== 'user') {
+      newData.push(groupedData[key][0]);
+    }
+  }
+
+  res.render('index', {data: newData})
+})
+
+router.get('/docs', function (req, res) {
+  const apis = expressListEndpoints(req.app);
   const groupedData = {};
 
   apis.forEach((elem) => {
@@ -24,7 +54,7 @@ router.get('/', function (req, res) {
     });
   });
 
-  res.render('index', { title: 'Express', fullData: groupedData });
+  res.render('docs', { title: 'Express', fullData: groupedData });
 });
 
 module.exports = router;
