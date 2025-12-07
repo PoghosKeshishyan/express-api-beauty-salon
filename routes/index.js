@@ -18,7 +18,7 @@ router.get('/', function (req, res) {
     }
 
     groupedData[resource].push({
-      path: elem.path,
+      path: `${req.protocol}://${req.get('host')}${elem.path}`,
       method: elem.methods[0],
       isLink: elem.methods[0] === 'GET' && !elem.path.includes('/:id'),
     });
